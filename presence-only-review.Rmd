@@ -1,0 +1,46 @@
+---
+title: "Presence-Only Data in Species Distribution Modeling"
+subtitle: "A Review"
+author: Gregory Penn
+date: '`r format(Sys.Date(), "%B %d, %Y")`'
+bibliography: bibtex.bib
+link-citations: true
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+
+### Motivation
+
+The field of Species Distribution Modeling (SDM) is concerned with where organisms occur (prediction) and why they occur where they do (explanation). The goal of prediction supports critical functions of land/resource management and conservation. The goal of explanation supports basic science regarding species of plants, animals, and others, which in turn supports management and conservation practices. Because so many important disciplines rely on Species Distribution Modeling, issues affecting SDM accuracy and reliability are of broad importance.
+
+Modeling species distributions is hard. This is partly because of the difficulty of obtaining a representative sample of species occurance and the relavant covariates in geographic and environmental spaces that are large and complex. The ideal sampling design collects presence-absence and covariate observations at a large number of sites that are randomized over geographic space. It could take years to collect adequate data for a single project, even with a large team of fieldworkers and ample resources. For this reason, there is considerable interest in how less than ideal data can be utilized to make reliable inference. 
+
+### Presence-Only Data
+
+Presence-only data are observations that a species occured at some place. They say nothing about where the species did not occur, an omission that causes considerable difficulty. But such data are abundant in the historical records of museums and herbaria, in travel logs, and increasingly online as citizen science from sources like [iNaturalist](https://www.inaturalist.org).
+
+Presence-only data is particularly appealing, because it often exists in abundance. Historical records from herbarium and museum catalogs represent a trove of information
+
+### Warton and Shepherd
+@Warton2010 propose Poison poisson point process models as the solution to three major problems with presence-only data: specification, implementation, and interpretation. *Specification* -- a model should be fit to observed data only. *Interpretation* -- the pseudo-absence approach requires model parameters that are a function of arbitrary decisions regarding the number and locations of pseudo-absence points. *Implementation* -- It is unclear how the number and locations of pseudo-absence points should be chosen. In practice, some conventions have emerged, but their justification lies in handwaving and reference to convention.
+
+### Hastie and Fithian
+@Hastie2013 claim that the probability of species occurance given some covariates cannot be infered from presence-only data alone. They support this claim with an argument from the theory of conditional probability, showing that an estimate of the marginal (i.e. overall) probability of species occurance is required. They also claim that the required estimate of marginal occurance probability cannot be made from presence-only data without unjustifiable simplifying assumptions.
+
+I propose that a Bayesian approach provides a rigorous framework for incorporating outside information as an informative prior distribution on the marginal probability of occurance. I show that the Bayesian approach with a uniform prior is equivalent to the frequentist approach described by Hastie and Fithian. I also show that the common "pseudo-absence" approach to analyzing presence-only data resembles the Bayesian approach when applied to rare species, though it lacks the Bayesian approach's rigor in addressing uncertainty in model inputs. 
+
+We wish to infer the probability that a species occurs $P(y=1)$, given covariates $\mathbf{z}$. Conditional probability theory gives us
+
+$$
+P(y=1 \mid \vec{z}) = \frac{ \Pr(y=1) \Pr(\vec{z}) }
+{ \Pr(y=1) \Pr(\vec{z} \mid y=1) + \Pr(y=0) \Pr(\vec{z} \mid y=0) }
+$$
+The trouble is that we don't know the marginal (i.e. overall) probability of presence $P(y=1)$. Without absence data, we really have no way to estimate it, either. This problem seems to be an artifact of frequentist naivite, the assumption that we know nothing about $P(y=1)$ beyond what can be infered directly from the data under analysis. The Bayesian alternative is to put a prior distribution on $P(y=1)$. The "pseudo-absence" approach seems to be doing essentially this, but with a point estimate rather than a distribution on $P(y=1)$. And we can see why it might give a useful approximation with rare species, which will be absent in most randomly chosen locations.
+
+So what would be a better way to get a prior on overall occurance probability? For rare species, any realistic number of spatially random presence-absence sites is likely not to turn up any presences. Perhaps expert knowledge is the best we could do? 
+
+`r if (knitr::is_html_output()) '### References {-}'`
